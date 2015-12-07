@@ -12,6 +12,7 @@ console.log("* Restarting! This means all session data is erased.");
 
 app.use(function(req, res, next){
   console.log("------");
+  console.log(req.headers.host + req.url);
   next();
 });
 
@@ -27,12 +28,13 @@ var sessionFunction = session({
   saveUninitialized: true
 });
 app.use(function(req, res, next){
-  console.log("* Parsing the session variables...");
+  console.log("* The session ID is " + req.cookies["connect.sid"] + ". 'Hashing' it...")
   sessionFunction(req, res, next);
 });
 
 var passportInitializer = passport.initialize();
 app.use(function(req, res, next){
+  console.log("* The session hash is " + req.sessionID + "...");
   console.log("* Initializing Passport...");
   passportInitializer(req, res, next);
 });
@@ -91,7 +93,10 @@ app.get("/signin", function(req, res){
 });
 
 app.get("/signout", function(req, res){
-  console.log("* Signing out: Deleting " + (req.user ? user.username : "user") + "'s session variables and making sure their info isn't being saved in memory anywhere...");
+  var username;
+  if(req.user) username = req.user.username;
+  else username = "user";
+  console.log("* Signing out: Deleting " + username + "'s session variables and making sure their info isn't being saved in memory anywhere...");
   req.session.destroy();
   res.locals.user = null
   res.render("signout");
