@@ -54,19 +54,19 @@ app.use(function(req, res, next){
 });
 
 passport.serializeUser(function(user, next) {
-  console.log("* Serializing the user: Saving " + user.username + "'s data as a session variable...");
+  console.log("* Serializing: Saving " + user.username + "'s data as a session variable...");
   next(null, user);
 });
 
 passport.deserializeUser(function(user, next) {
-  console.log("* Deserializing the user: Getting " + user.username + "'s data from session variables...");
+  console.log("* Deserializing: Getting " + user.username + "'s data from session variables...");
   next(null, user);
 });
 
 var twitterStrategy = new Strategy(
   env.twitter,
   function(token, tokenSecret, profile, next){
-    console.log("* Got " + profile.username + "'s info! Sending it to be serialized...");
+    console.log("* Got " + profile.username + "'s info using the Twitter 'Strategy'. Sending it to be serialized...");
     next(null, profile);
   }
 );
@@ -80,18 +80,18 @@ app.get("/", function(req, res){
 });
 
 app.get("/cat", function(req, res){
-  console.log("* #cat: Rendering a cat picture.");
+  console.log("* Rendering a cat picture...");
   res.render("show");
 });
 
 var twitterAuthenticator = passport.authenticate("twitter");
 app.get("/signin", function(req, res){
-  console.log("* #signin: Redirecting to Twitter...");
+  console.log("* Signing in: Redirecting to Twitter...");
   twitterAuthenticator(req, res);
 });
 
 app.get("/signout", function(req, res){
-  console.log("* #signout: Deleting " + (req.user ? user.username : "user") + "'s session variables and making sure their info isn't being saved in memory anywhere...");
+  console.log("* Signing out: Deleting " + (req.user ? user.username : "user") + "'s session variables and making sure their info isn't being saved in memory anywhere...");
   req.session.destroy();
   res.locals.user = null
   res.render("signout");
@@ -100,7 +100,7 @@ app.get("/signout", function(req, res){
 var authenticateNewUser = passport.authenticate("twitter", { failureRedirect: "/signout" });
 app.get("/twitter-callback",
   function(req, res, next){
-    console.log("* Using the OAuth tokens Twitter sent back to get the user's Twitter profile information...")
+    console.log("* Authenticating: Using the OAuth tokens Twitter sent back to get the user's Twitter profile information...")
     authenticateNewUser(req, res, next);
   },
   function(req, res){
