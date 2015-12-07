@@ -50,7 +50,7 @@ app.get("/signout", function(req, res){
   res.render("signout");
 });
 
-app.get("/twitter-callback",
+app.get("/auth/twitter/callback",
   passport.authenticate("twitter", { failureRedirect: "/signout" }),
   function(req, res){
     res.redirect("/");
