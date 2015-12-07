@@ -9,7 +9,7 @@ module.exports = {
   twitter: {
     consumerKey: "abc123",
     consumerSecret: "abc123",
-    callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
+    callbackUrl: "http://127.0.0.1:3000/auth/twitter/callback"
   }
 }
 ```
