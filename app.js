@@ -103,7 +103,7 @@ app.get("/signout", function(req, res){
 });
 
 var authenticateNewUser = passport.authenticate("twitter", { failureRedirect: "/signout" });
-app.get("/twitter-callback",
+app.get("/auth/twitter/callback",
   function(req, res, next){
     console.log("* Authenticating: Using the OAuth tokens Twitter sent back to get the user's Twitter profile information...")
     authenticateNewUser(req, res, next);
