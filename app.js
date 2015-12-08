@@ -4,13 +4,12 @@ var cookieParser = require("cookie-parser");
 var session = require("express-session");
 var passport = require("passport");
 var Strategy = require("passport-twitter").Strategy;
-var env = require("./env");
 
 app.set("view engine", "hbs");
 
 app.use(cookieParser());
 app.use(session({
-  secret: env.sessionSecret,
+  secret: process.env.sessionSecret,
   resave: true,
   saveUninitialized: true
 }));
@@ -27,8 +26,11 @@ passport.serializeUser(function(user, next) {
 passport.deserializeUser(function(user, next) {
   next(null, user);
 });
-passport.use(new Strategy(
-  env.twitter,
+passport.use(new Strategy({
+  consumerKey: process.env.consumerKey,
+  consumerSecret: process.env.consumerSecret,
+  callbackURL: process.env.callbackURL
+},
   function(token, tokenSecret, profile, next){
     next(null, profile);
   }
@@ -56,6 +58,6 @@ app.get("/auth/twitter/callback",
     res.redirect("/");
   });
 
-app.listen(3000, function(){
+app.listen(process.env.PORT || 3000, function(){
   console.log("* I'm working! Go to http://127.0.0.1:3000");
 });
